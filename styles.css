@@ -10,6 +10,7 @@
   --font-serif: "Poppins", system-ui, -apple-system, sans-serif;
   --font-sans: "Poppins", system-ui, -apple-system, sans-serif;
   --header-h: 5rem;
+  --container-max: 1200px;
   --glow-text: 0 0 40px rgba(197, 160, 89, 0.35), 0 0 80px rgba(197, 160, 89, 0.12);
   --glow-frame: 0 0 60px rgba(197, 160, 89, 0.45), 0 0 120px rgba(212, 175, 55, 0.15);
 }
@@ -33,6 +34,7 @@ body {
   font-size: 1rem;
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 a {
@@ -56,7 +58,7 @@ img {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.5rem clamp(1.5rem, 5vw, 4rem);
+  padding: 1.1rem clamp(1rem, 4vw, 3rem);
   background: linear-gradient(to bottom, var(--bg) 0%, rgba(13, 13, 13, 0.92) 70%, transparent 100%);
 }
 
@@ -98,12 +100,12 @@ main {
 
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
   gap: clamp(2rem, 6vw, 4.5rem);
   align-items: center;
   min-height: calc(100vh - var(--header-h));
-  padding: clamp(2rem, 5vw, 4rem) clamp(1.5rem, 5vw, 4rem) clamp(4rem, 8vw, 6rem);
-  max-width: 1200px;
+  padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 4vw, 3rem) clamp(3rem, 7vw, 5rem);
+  max-width: var(--container-max);
   margin: 0 auto;
 }
 
@@ -241,10 +243,14 @@ main {
 
 /* Secondary sections */
 .panel {
-  max-width: 720px;
+  max-width: var(--container-max);
   margin: 0 auto;
-  padding: 3rem clamp(1.5rem, 5vw, 4rem) 5rem;
+  padding: 3rem clamp(1rem, 4vw, 3rem) 5rem;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.panel__text {
+  max-width: 50rem;
 }
 
 .panel__title {
@@ -263,7 +269,7 @@ main {
 .projects-grid {
   margin-top: 2rem;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1rem;
 }
 
@@ -410,9 +416,14 @@ main {
 
 /* —— Responsive —— */
 @media (max-width: 900px) {
+  :root {
+    --header-h: 4.6rem;
+  }
+
   .hero {
     grid-template-columns: 1fr;
     min-height: auto;
+    gap: 1.5rem;
   }
 
   .hero__visual {
@@ -428,13 +439,64 @@ main {
   }
 }
 
+@media (max-width: 640px) {
+  .site-header {
+    padding: 0.9rem 0.9rem;
+  }
+
+  .logo {
+    font-size: 1.05rem;
+  }
+
+  .hero {
+    padding: 1.2rem 0.9rem 2.6rem;
+  }
+
+  .panel {
+    padding: 2.2rem 0.9rem 3.2rem;
+  }
+
+  .hero__name {
+    font-size: clamp(2rem, 10vw, 2.5rem);
+  }
+
+  .hero__bio {
+    font-size: 0.92rem;
+  }
+
+  .project-card {
+    padding: 0.9rem;
+  }
+}
+
 @media (max-width: 480px) {
   .nav {
-    gap: 1rem;
+    gap: 0.75rem;
   }
 
   .nav__link {
-    font-size: 0.65rem;
-    letter-spacing: 0.12em;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+  }
+
+  .social {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .contact-form__submit {
+    width: 100%;
+    justify-self: stretch;
+    text-align: center;
+  }
+}
+
+@media (min-width: 1400px) {
+  :root {
+    --container-max: 1320px;
+  }
+
+  .hero__frame {
+    width: min(100%, 420px);
   }
 }
