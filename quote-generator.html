@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quote Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      body {
+        margin: 0;
+        font-family: "Poppins", sans-serif;
+        background: #111827;
+        color: #f3f4f6;
+      }
+      main {
+        max-width: 640px;
+        margin: 3rem auto;
+        padding: 1.5rem;
+      }
+      h1 { color: #f59e0b; }
+      .card {
+        margin-top: 1rem;
+        background: #1f2937;
+        border-radius: 0.75rem;
+        padding: 1rem;
+      }
+      blockquote {
+        margin: 0 0 0.75rem;
+        font-size: 1.1rem;
+      }
+      button {
+        padding: 0.6rem 0.85rem;
+        margin-right: 0.5rem;
+        cursor: pointer;
+      }
+      a { color: #f59e0b; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <a href="../index.html">Back to portfolio</a>
+      <h1>Quote Generator</h1>
+      <div class="card">
+        <blockquote id="quote">Click "New Quote" to begin.</blockquote>
+        <p id="author"></p>
+        <button id="newQuote">New Quote</button>
+        <button id="copyQuote">Copy</button>
+      </div>
+    </main>
+    <script>
+      const quotes = [
+        { text: "Start where you are. Use what you have. Do what you can.", author: "Arthur Ashe" },
+        { text: "Simplicity is the soul of efficiency.", author: "Austin Freeman" },
+        { text: "Done is better than perfect.", author: "Sheryl Sandberg" },
+        { text: "Small progress is still progress.", author: "Unknown" },
+      ];
+
+      const quoteEl = document.getElementById("quote");
+      const authorEl = document.getElementById("author");
+      const newBtn = document.getElementById("newQuote");
+      const copyBtn = document.getElementById("copyQuote");
+
+      function pickQuote() {
+        const item = quotes[Math.floor(Math.random() * quotes.length)];
+        quoteEl.textContent = `"${item.text}"`;
+        authorEl.textContent = `- ${item.author}`;
+      }
+
+      newBtn.addEventListener("click", pickQuote);
+      copyBtn.addEventListener("click", async () => {
+        const text = `${quoteEl.textContent} ${authorEl.textContent}`;
+        try {
+          await navigator.clipboard.writeText(text);
+          copyBtn.textContent = "Copied!";
+          setTimeout(() => {
+            copyBtn.textContent = "Copy";
+          }, 1200);
+        } catch (error) {
+          copyBtn.textContent = "Cannot copy";
+        }
+      });
+
+      pickQuote();
+    </script>
+  </body>
+</html>

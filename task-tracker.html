@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Task Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      body {
+        margin: 0;
+        font-family: "Poppins", sans-serif;
+        background: #111;
+        color: #eee;
+      }
+      main {
+        max-width: 640px;
+        margin: 3rem auto;
+        padding: 1.5rem;
+      }
+      h1 {
+        margin-top: 0;
+        color: #d4af37;
+      }
+      .row {
+        display: flex;
+        gap: 0.5rem;
+      }
+      input {
+        flex: 1;
+        padding: 0.7rem;
+      }
+      button {
+        padding: 0.7rem 1rem;
+        border: 0;
+        cursor: pointer;
+      }
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+      li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #1b1b1b;
+        margin-top: 0.6rem;
+        padding: 0.6rem 0.8rem;
+      }
+      li.done span {
+        text-decoration: line-through;
+        opacity: 0.6;
+      }
+      a {
+        color: #d4af37;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <a href="../index.html">Back to portfolio</a>
+      <h1>Task Tracker</h1>
+      <div class="row">
+        <input id="taskInput" type="text" placeholder="Add a task..." />
+        <button id="addBtn">Add</button>
+      </div>
+      <ul id="taskList"></ul>
+    </main>
+    <script>
+      const input = document.getElementById("taskInput");
+      const addBtn = document.getElementById("addBtn");
+      const list = document.getElementById("taskList");
+      const storageKey = "task-tracker-items";
+      let tasks = JSON.parse(localStorage.getItem(storageKey) || "[]");
+
+      function save() {
+        localStorage.setItem(storageKey, JSON.stringify(tasks));
+      }
+
+      function render() {
+        list.innerHTML = "";
+        tasks.forEach((task, index) => {
+          const item = document.createElement("li");
+          if (task.done) item.classList.add("done");
+          item.innerHTML = `<span>${task.text}</span>
+            <div>
+              <button data-action="toggle">Done</button>
+              <button data-action="delete">Delete</button>
+            </div>`;
+
+          item.querySelectorAll("button").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              if (btn.dataset.action === "toggle") tasks[index].done = !tasks[index].done;
+              if (btn.dataset.action === "delete") tasks.splice(index, 1);
+              save();
+              render();
+            });
+          });
+          list.appendChild(item);
+        });
+      }
+
+      function addTask() {
+        const text = input.value.trim();
+        if (!text) return;
+        tasks.push({ text, done: false });
+        input.value = "";
+        save();
+        render();
+      }
+
+      addBtn.addEventListener("click", addTask);
+      input.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") addTask();
+      });
+
+      render();
+    </script>
+  </body>
+</html>

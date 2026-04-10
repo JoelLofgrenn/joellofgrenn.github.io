@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather Snapshot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      body {
+        margin: 0;
+        font-family: "Poppins", sans-serif;
+        background: #0f172a;
+        color: #e2e8f0;
+      }
+      main {
+        max-width: 640px;
+        margin: 3rem auto;
+        padding: 1.5rem;
+      }
+      h1 { color: #7dd3fc; }
+      .row {
+        display: flex;
+        gap: 0.5rem;
+      }
+      input, button {
+        padding: 0.65rem;
+      }
+      input { flex: 1; }
+      .card {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #1e293b;
+        border-radius: 0.6rem;
+      }
+      a { color: #7dd3fc; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <a href="../index.html">Back to portfolio</a>
+      <h1>Weather Snapshot</h1>
+      <p>Uses the free Open-Meteo API (no key).</p>
+      <div class="row">
+        <input id="city" type="text" placeholder="Enter city (e.g. Lagos)" />
+        <button id="check">Check</button>
+      </div>
+      <div id="result" class="card">Search a city to view weather.</div>
+    </main>
+    <script>
+      const cityInput = document.getElementById("city");
+      const result = document.getElementById("result");
+      const btn = document.getElementById("check");
+
+      async function getWeather() {
+        const city = cityInput.value.trim();
+        if (!city) return;
+        result.textContent = "Loading...";
+        try {
+          const geoRes = await fetch(
+            `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1`
+          );
+          const geoData = await geoRes.json();
+          if (!geoData.results || !geoData.results.length) {
+            result.textContent = "City not found.";
+            return;
+          }
+          const place = geoData.results[0];
+          const weatherRes = await fetch(
+            `https://api.open-meteo.com/v1/forecast?latitude=${place.latitude}&longitude=${place.longitude}&current=temperature_2m,relative_humidity_2m,wind_speed_10m`
+          );
+          const weatherData = await weatherRes.json();
+          const current = weatherData.current;
+          result.innerHTML = `
+            <strong>${place.name}, ${place.country}</strong><br />
+            Temperature: ${current.temperature_2m}°C<br />
+            Humidity: ${current.relative_humidity_2m}%<br />
+            Wind: ${current.wind_speed_10m} km/h
+          `;
+        } catch (error) {
+          result.textContent = "Could not fetch weather right now.";
+        }
+      }
+
+      btn.addEventListener("click", getWeather);
+      cityInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") getWeather();
+      });
+    </script>
+  </body>
+</html>
